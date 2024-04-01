@@ -1,0 +1,133 @@
+// cd C:\Users\Fridmak\n2t-software-suite
+// JackCompiler.bat "C:\Users\Fridmak\Desktop\TIC-TAC-TOE-9x9\игра на jack"
+// VMEmulator.bat
+class Pointer {
+
+    field Point MainPointer;
+
+
+    field int direction; 
+    field char key;
+    field Tictac game;
+    field int fieldNumber;
+    field int xPos;
+    field int yPos;
+    field int posNumber;
+    field Animations animation;
+    field bool exit;
+    field int winner;
+
+    //DONE
+    constructor Pointer new() {
+        let MainPointer = Point.new(0, 0, 23);
+        let direction = 0;
+        let game = Tictac.new();
+        let animation = Animations.new();
+        let exit = false;
+
+        return this;
+    }
+
+    //DONE
+    method void dispose() {
+        do MainPointer.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    //DONE
+    method void run() {
+        while (~exit) {
+            do animation.PrintCurrentPlayer(300, 15, game.getCurPlayer());
+            
+            do animation.drawField(game.GetGame());
+            if (game.checkEndGame()){
+                let winner = game.GetWinner();
+                let exit = true; 
+            }
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+            }
+
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+                do movePointer();
+                do animation.drawField(game.GetGame());
+                do animation.DrawMainField(game.GetMainGame());
+            }
+        }
+        do animation.drawWinner();
+        return;
+  }
+
+
+    
+    method void movePointer() {
+        if (key = 131) {
+            do MainPointer.moveUp();
+        }
+        if (key = 133) {
+            do MainPointer.moveDown();
+        }
+        if (key = 130) {
+            do MainPointer.moveLeft();
+        }
+        if (key = 132) {
+            do MainPointer.moveRight();
+        }
+    
+        if (key = 128){
+            if ((MainPointer.GetX() < 244) & (MainPointer.GetY() < 244) & MainPointer.CanPlace()){
+                let fieldNumber = GetField();
+                let xPos = updateX();
+                let yPos = updateY();
+                let posNumber = yPos*3 + xPos;
+                if (game.CanPlaceHere(fieldNumber, posNumber)){ 
+                    do MainPointer.Refresh();
+                    do game.MakeTurn(fieldNumber, posNumber);
+                    do MainPointer.Place(xPos*81, yPos*81);
+
+
+                    if (game.checkEndGame()){
+                        let winner = game.GetWinner();
+                        let exit = true; 
+                    }
+                    do game.ChangePlayer();
+                }
+            }
+        }
+        if (key = 82){
+            do MainPointer.GoToNewSystem();
+        }
+    
+
+        do Sys.wait(110); 
+        return;
+    }
+
+
+    //Returns X number from 0 to 2 (left to right)
+    
+    method int updateX(){
+        var int currentPosX;
+        let currentPosX = (MainPointer.GetX() - ((MainPointer.GetX() / 81) * 81)) / 27;
+        do Sys.wait(1000);
+        return currentPosX;
+    }
+
+    //Returns Y number from 0 to 2 (up to down)
+    method int updateY(){
+        var int currentPos;
+        let currentPos = (MainPointer.GetY() - ((MainPointer.GetY() / 81) * 81)) / 27;
+        
+        return currentPos;
+    }
+
+    // Returns number of field we are in
+    method int GetField(){
+        var int fieldNum;
+        //let fieldNum = (MainPointer.GetY() - ((MainPointer.GetY() / 81) * 81))*3 + (MainPointer.GetX() - ((MainPointer.GetX() / 81) * 81));
+        let fieldNum = MainPointer.GetY() / 81 * 3 + (MainPointer.GetX() / 81);
+        return fieldNum;
+    }
+}

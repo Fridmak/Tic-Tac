@@ -1,0 +1,154 @@
+//cd C:\Users\Fridmak\n2t-software-suite
+//JackCompiler.bat "C:\Users\Fridmak\Desktop\TIC-TAC-TOE-9x9\игра на jack"
+class Tictac {
+    field Array game; //массив массивов из партий 
+    static int curPlayer; // 0 - никто , 1 - X, 2- Y
+    field int winner;
+    field Array mainGame; //всевышняя партия
+
+    //IDK
+    constructor Tictac new(){
+        var int i;
+        let curPlayer = 1;
+        let game = Array.new(9);
+        let mainGame = Array.new(9);
+        let i = 0;
+        while (i < 9){
+                let mainGame[i] = 0; 
+                let i = i + 1;
+            }
+        let i = 0;
+        while (i < 9){
+            let game[i] = CopyArray(mainGame); 
+            let i = i + 1;
+        }
+        let winner = 0;
+        return this;
+    }
+
+    method Array GetGame(){
+        return game;
+    }
+
+    method Array GetMainGame(){
+        return mainGame;
+    }
+
+    //DONE
+    method boolean CheckRows (Array cell) {
+        var int i;
+        let i = 0;
+        while (i < 9){
+            if ((cell[i] = cell[i+1]) & (cell[i+1] = cell[i+2]) & (~(cell[i] = 0))){
+                return true;
+            }
+            let i = i + 3;
+        }
+        return false;
+    }
+
+    //DONE
+    method boolean CheckColumns (Array cell) {
+        var int i;
+        let i = 0;
+        while (i < 3){
+            if ((cell[i] = cell[i+3]) & (cell[i+3] = cell[i+6])  & (~(cell[i] = 0))){
+                return true;
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+
+    //DONE
+    method boolean CheckDiag (Array cell) {
+        if ((((cell[0] = cell[4]) & (cell[4] = cell[8]) & (~(cell[0] = 0))) | ((cell[2] = cell[4]) & (cell[4] = cell[6]) & (~(cell[2] = 0))))){
+            return true;
+        }
+        return false;
+    }
+
+    //DONE
+    method boolean CheckWin(int j){
+        return  CheckColumns(game[j]) | CheckDiag(game[j]) | CheckRows(game[j]);
+    }
+
+    //DONE
+    method void ChangePlayer(){
+        if (curPlayer = 1){
+            let curPlayer = 2;
+        }
+        else{
+            let curPlayer = 1;
+        }
+        return;
+    }
+
+    //DONE
+    method boolean checkEndGame(){
+        var int i;
+        let i = 0;
+        while (i < 9){
+            if (CheckWin(i)){
+                if (mainGame[i] = 0){
+                    let mainGame[i] = curPlayer;
+                }
+                if (CheckColumns(mainGame) | CheckDiag(mainGame) | CheckRows(mainGame)){
+                    let winner = curPlayer;
+                    return true;
+                }
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+
+    //DONE
+    method string GetWinner(){
+        return winner;
+    }
+
+    //IDK
+    method void MakeTurn(int cell, int position){ 
+        var Array arr; 
+        let arr = game[cell];
+        let arr[position] = curPlayer; 
+
+        return;
+    }
+
+    method bool CanPlaceHere(int cell, int position){
+        var Array arr; 
+        let arr = game[cell];
+        if (arr[position] = 0){
+            return true;
+        }
+        return false;
+    }
+
+    //DONE
+    method void dispose(){
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    //IDK
+    method Array CopyArray(Array mainArray){
+    var int i;
+    var int value;
+    var Array copiedArray;
+    let copiedArray = Array.new(9);
+      
+    let i = 0;
+    while (i < 9){
+        let value = mainArray[i];
+        let copiedArray[i] = value;
+        let i = i + 1;
+    }
+    return copiedArray;
+    }
+
+    method int getCurPlayer(){
+        return curPlayer;
+    }
+}
