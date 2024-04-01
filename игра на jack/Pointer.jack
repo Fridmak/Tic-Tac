@@ -77,34 +77,58 @@ class Pointer {
         }
     
         if (key = 128){
-            if ((MainPointer.GetX() < 244) & (MainPointer.GetY() < 244) & MainPointer.CanPlace()){
-                let fieldNumber = GetField();
-                let xPos = updateX();
-                let yPos = updateY();
-                let posNumber = yPos*3 + xPos;
-                if (game.CanPlaceHere(fieldNumber, posNumber)){ 
-                    do MainPointer.Refresh();
-                    do game.MakeTurn(fieldNumber, posNumber);
-                    do MainPointer.Place(xPos*81, yPos*81);
-
-
-                    if (game.checkEndGame()){
-                        let winner = game.GetWinner();
-                        let exit = true; 
-                    }
-                    do game.ChangePlayer();
-                }
-            }
+            do Enter();
         }
+
+        if (key = 87){ //W
+            do MainPointer.moveUp();
+        }
+
+        if (key = 83){ //S
+            do MainPointer.moveDown();
+        }
+
+        if (key = 65){ //A
+            do MainPointer.moveLeft();
+        }
+
+        if (key = 68){ //D
+            do MainPointer.moveRight();
+        }
+
         if (key = 82){
             do MainPointer.GoToNewSystem();
         }
     
-
+        if (key = 32){
+            do Enter();
+        }
+        
         do Sys.wait(110); 
         return;
     }
+    
+    method void Enter(){
+        if ((MainPointer.GetX() < 244) & (MainPointer.GetY() < 244) & MainPointer.CanPlace()){
+            let fieldNumber = GetField();
+            let xPos = updateX();
+            let yPos = updateY();
+            let posNumber = yPos*3 + xPos;
+            if (game.CanPlaceHere(fieldNumber, posNumber)){ 
+                do MainPointer.Refresh();
+                do game.MakeTurn(fieldNumber, posNumber);
+                do MainPointer.Place(xPos*81, yPos*81);
 
+
+                if (game.checkEndGame()){
+                    let winner = game.GetWinner();
+                    let exit = true; 
+                }
+                do game.ChangePlayer();
+            }
+        }
+        return;
+    }
 
     //Returns X number from 0 to 2 (left to right)
     
